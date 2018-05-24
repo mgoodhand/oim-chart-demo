@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Plot from 'react-plotly.js';
+import OIMChart from './oim-chart'
 
 class App extends Component {
   render() {
@@ -11,24 +11,8 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">OIM Charts</h1>
         </header>
-        <Plot
-        data={[
-          {
-            x: [1, 2, 3],
-            y: [2, 6, 3],
-            type: 'scatter',
-            mode: 'lines+points',
-            marker: {color: 'red'},
-          },
-          {
-            x: [1, 2, 3], 
-            y: [2, 5, 3],
-            type: 'bar',
-          } 
-        ]}
-        layout={{width: 320, height: 240, title: 'Not-yet-OIM Plot'}}
-        config={{editable: false,  displayModeBar: false}}
-      />
+        <OIMChart src="https://raw.githubusercontent.com/mgoodhand/oim-samples/master/json/cr-2017-05-02/goog-20180331.json"
+          concept="us-gaap:Revenues"/>
       </div>
     );
   }
