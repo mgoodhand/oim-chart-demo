@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Plot from 'react-plotly.js';
 import PropTypes from 'prop-types';
+import { Set } from 'immutable';
 
 export default class OIMChart extends Component {
 
@@ -26,14 +27,40 @@ export default class OIMChart extends Component {
       .then(data => {
       this.setState({ doc: data })
       console.log(this.state.doc)
+      this.facts()
+      this.breakdowns()
     })
   }
 
+  concepts() {
+    const concepts = this.state.doc.facts
+       .map(f => f.aspects["xbrl:concept"])
+    console.log("Concepts: ", concepts)
+    return concepts
+  }
+
   facts() {
-    const selectedFacts = this.doc.facts
-       .filter(f => f.aspects["xbrl:concept"].equals(this.concept))
+    console.log("Selected concept", this.props.concept)
+    const selectedFacts = this.state.doc.facts
+       .filter(f => f.aspects["xbrl:concept"] === this.props.concept)
     console.log("Selected facts", selectedFacts)
     return selectedFacts
+  }
+
+  static tdas(fact) {
+    const tdas = Set(
+      Object.entries(fact.aspects)
+        .filter(([aspect, value]) => !aspect.startsWith("xbrl:"))
+        .map(([aspect, value]) => aspect)
+    )
+    console.log("tdas ", tdas)
+    return tdas
+  }
+  
+  breakdowns() {
+    const breakdowns = Set(this.facts().map(fact => OIMChart.tdas(fact)))
+    console.log("breakdowns :", breakdowns.toArray().map(tdas => tdas.toArray()))
+    return breakdowns
   }
 
   render() {
