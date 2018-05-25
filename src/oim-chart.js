@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import Plot from 'react-plotly.js';
 import PropTypes from 'prop-types';
 import { Set } from 'immutable';
+import OIM from 'oim';
 
 export default class OIMChart extends Component {
 
