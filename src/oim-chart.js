@@ -39,7 +39,7 @@ export default class OIMChart extends Component {
         .filter(f => OIM.aspectMatch(f, {
           "xbrl:concept": concept
         }))
-      console.log("Selected facts", selectedFacts)
+      console.log("Selected facts", JSON.stringify(selectedFacts, null, 2))
       return selectedFacts
     }
   }
