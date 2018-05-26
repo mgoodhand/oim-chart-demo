@@ -27,6 +27,7 @@ export default class FactTable extends Component {
   render() {
     return (
       <ul>
+        {this.props.facts.map(f => JSON.stringify(f))}
       </ul>
     );
   }

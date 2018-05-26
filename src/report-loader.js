@@ -30,7 +30,7 @@ export default class ReportLoader extends Component {
 
   render() {
     return (
-        <OIMChart doc={this.state.doc} filters={this.props.filters} />
+        this.state.doc ? <OIMChart doc={this.state.doc} filters={this.props.filters} /> : <p>"Loading ..."</p>
     );
   }
 }

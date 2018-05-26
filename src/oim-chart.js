@@ -3,47 +3,57 @@ import Plot from 'react-plotly.js';
 import PropTypes from 'prop-types';
 import { Set } from 'immutable';
 import OIM from './oim';
-import AspectFilters from './aspect-filters';
+import Filter from './filter';
 import FactTable from './fact-table';
 
 export default class OIMChart extends Component {
 
   static propTypes = {
-    doc: PropTypes.object,
-    filters: PropTypes.object
+    doc: PropTypes.object.isRequired,
+    concept: PropTypes.string
   }
 
   state = {
-    filters: this.props.filters
+    concept: this.initialConcept()
+  }
+
+  availableConcepts() {
+    return OIM.aspectValues(this.facts(), "xbrl:concept").sort().toArray()
+  }
+
+  initialConcept() {
+    return this.props.concept || this.availableConcepts()[0]
+  }
+
+  facts() {
+    return this.props.doc.facts
   }
 
   filteredFacts() {
-    if (!this.props.doc || !this.props.doc.facts) {
-      console.log("No doc, or doc without facts")
+    if (!this.state.concept) {
       return []
     }
-    else if (!this.state.filters) {
-      return this.props.doc.facts 
-    }
     else {
-      const selectedFacts = this.props.doc.facts
-        .filter(f => OIM.aspectMatch(f, this.state.filters))
+      const selectedFacts = this.facts()
+        .filter(f => OIM.aspectMatch(f, {
+          "xbrl:concept": this.concept
+        }))
       console.log("Selected facts", selectedFacts)
-      OIM.breakdowns(this.props.doc.facts).sort().forEach(b => {
-        console.log(b.join())
-      })
       return selectedFacts
     }
   }
 
-  aspectFilterChange = filters => {
-    this.setState({ filters: filters })
+  conceptFilterChange = e => {
+    const concept = e.target.value
+    console.log("Concept set to ", concept)
+    this.setState({ concept: concept })
   }
 
   render() {
     return (
         <Fragment>
-        <AspectFilters onAspectFilterChange={this.aspectFilterChange} facts={this.filteredFacts()}/>
+        <Filter onFilterChange={this.conceptFilterChange} options={this.availableConcepts()} default={this.state.concept}/>
+        <p>Facts for {this.state.concept}</p>
         <FactTable facts={this.filteredFacts()} />
         <div>
         <Plot
