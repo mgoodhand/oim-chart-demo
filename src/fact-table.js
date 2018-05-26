@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import OIM from './oim';
 
@@ -15,26 +15,33 @@ export default class FactTable extends Component {
   }
 
   fixedAspectValues() {
-    console.log(OIM.fixedAspectValueMap(this.props.facts).toJSON())
-    console.log(OIM.variableAspectValueMap(this.props.facts).toJSON())
-    return "foo"
+    const result = OIM.fixedAspectValueMap(this.props.facts)
+    console.log(result.toJSON())
+    return result
+  }
+
+  variableAspects() {
+    const result = OIM.variableAspectValueMap(this.props.facts).keySeq().sort().toArray()
+    console.log("Variable aspects: ", result)
+    return result 
   }
 
   render() {
     return (
       <div>
-      {this.fixedAspectValues()} 
+      {Object.entries(this.fixedAspectValues().toJSON())
+          .map(([a, vs]) => (<div key={`fixed${a}`}>{a} = {vs[0]}</div>))}
       <table>
         <thead>
           <tr>
-            {this.nonConceptAspects().map(a => <th>{a}</th>)}
+            {this.variableAspects().map(a => <th>{a}</th>)}
             <th>Value</th>
           </tr>
         </thead>
         <tbody>
-          {this.props.facts.map(fact => (
-            <tr>
-              {this.nonConceptAspects().map(a => <td>{fact.aspects[a]}</td>)}
+          {this.props.facts.map((fact, row) => (
+            <tr key={row}>
+              {this.variableAspects().map((a, col) => <td key={`${row}-${col}`} >{fact.aspects[a]}</td>)}
               <td>{fact.value}</td>
             </tr>
           ))}

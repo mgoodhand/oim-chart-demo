@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import Plot from 'react-plotly.js';
 import PropTypes from 'prop-types';
-import { Set } from 'immutable';
 import OIM from './oim';
 import Filter from './filter';
 import FactTable from './fact-table';
@@ -55,7 +54,6 @@ export default class OIMChart extends Component {
     return (
         <Fragment>
         <Filter onFilterChange={this.conceptFilterChange} options={this.availableConcepts()} default={this.state.concept}/>
-        <p>Facts for {this.state.concept}</p>
         <FactTable facts={this.filteredFacts()} />
         <div>
         <Plot
