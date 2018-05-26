@@ -25,6 +25,14 @@ export default class OIM {
     return this.aspects(facts).filter(a => a.startsWith("xbrl:"))
   }
 
+  static aspectValueMap(facts) {
+    return this.aspects(facts).map(a => (
+      Map([[a, this.aspectValues(facts, a)]])
+    ))
+    .reduce((m1, m2) => m1.merge(m2), Map())
+    .toJSON()
+  }
+
   static factHasMatchingAspect(fact, aspect, aspectValue) {
     const factAspects = Map(fact.aspects)
     if (!factAspects.has(aspect)) {
