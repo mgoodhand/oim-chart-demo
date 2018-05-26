@@ -25,19 +25,22 @@ export default class OIM {
     return this.aspects(facts).filter(a => a.startsWith("xbrl:"))
   }
 
-  static aspectMatch(fact, filter) {
-    Map(filter).forEach((aspect, aspectValue) => {
-      const factAspects = Map(fact.aspects)
-      if (!factAspects.has(aspect)) {
-        // we're looking for exact matches
+  static factHasMatchingAspect(fact, aspect, aspectValue) {
+    const factAspects = Map(fact.aspects)
+    if (!factAspects.has(aspect)) {
+      // we're looking for exact matches
+      return false
+    }
+    else {
+      const fav = factAspects.get(aspect)
+      if (!(fav === aspectValue)) {
         return false
       }
-      else {
-        if (factAspects.get(aspect) !== aspectValue) {
-          return false
-        }
-      }
-    })
+    }
     return true
+  }
+
+  static aspectMatch(fact, filter) {
+    return Map(filter).every((aspectValue, aspect) => this.factHasMatchingAspect(fact, aspect, aspectValue))
   }
 }

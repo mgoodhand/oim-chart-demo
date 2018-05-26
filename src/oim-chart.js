@@ -30,13 +30,15 @@ export default class OIMChart extends Component {
   }
 
   filteredFacts() {
-    if (!this.state.concept) {
+    const concept = this.state.concept
+    if (!concept) {
       return []
     }
     else {
+      console.log("Selecting facts matching", concept)
       const selectedFacts = this.facts()
         .filter(f => OIM.aspectMatch(f, {
-          "xbrl:concept": this.concept
+          "xbrl:concept": concept
         }))
       console.log("Selected facts", selectedFacts)
       return selectedFacts
