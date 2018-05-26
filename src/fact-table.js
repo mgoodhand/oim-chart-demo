@@ -5,30 +5,33 @@ import OIM from './oim';
 export default class FactTable extends Component {
 
   static propTypes = {
-    facts: PropTypes.array
+    facts: PropTypes.array.isRequired
   }
 
-  // 
-  //    <table>
-  //      <thead>
-  //        <tr>
-  //          {b.map(a => <th>{a}</th>)}
-  //        </tr>
-  //      </thead>
-  //      <tbody>
-  //        {this.props.facts.map(fact => (
-  //          <tr>
-  //            {b.map(a => <td>{fact.aspects[a]}</td>)}
-  //          </tr>
-  //        ))}
-  //      </tbody>
-  //    </table>
+  nonConceptAspects() {
+    return OIM.aspects(this.props.facts)
+            .filter(a => !(a==="xbrl:concept"))
+            .sort()
+  }
 
   render() {
     return (
-      <ul>
-        {this.props.facts.map(f => JSON.stringify(f))}
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            {this.nonConceptAspects().map(a => <th>{a}</th>)}
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.props.facts.map(fact => (
+            <tr>
+              {this.nonConceptAspects().map(a => <td>{fact.aspects[a]}</td>)}
+              <td>{fact.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     );
   }
 }
