@@ -14,15 +14,16 @@ export default class FactTable extends Component {
             .sort()
   }
 
-  fixedAspects() {
-    console.log(OIM.aspectValueMap(this.props.facts))
+  fixedAspectValues() {
+    console.log(OIM.fixedAspectValueMap(this.props.facts).toJSON())
+    console.log(OIM.variableAspectValueMap(this.props.facts).toJSON())
     return "foo"
   }
 
   render() {
     return (
       <div>
-      {this.fixedAspects()} 
+      {this.fixedAspectValues()} 
       <table>
         <thead>
           <tr>

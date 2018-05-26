@@ -30,7 +30,14 @@ export default class OIM {
       Map([[a, this.aspectValues(facts, a)]])
     ))
     .reduce((m1, m2) => m1.merge(m2), Map())
-    .toJSON()
+  }
+
+  static fixedAspectValueMap(facts) {
+    return this.aspectValueMap(facts).filter(v => v.size === 1) 
+  }
+
+  static variableAspectValueMap(facts) {
+    return this.aspectValueMap(facts).filter(v => v.size > 1) 
   }
 
   static factHasMatchingAspect(fact, aspect, aspectValue) {
