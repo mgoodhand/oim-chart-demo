@@ -34,7 +34,7 @@ export default class FactTable extends Component {
       <table>
         <thead>
           <tr>
-            {this.variableAspects().map(a => <th>{a}</th>)}
+            {this.variableAspects().map(a => <th key={`th${a}`}>{a}</th>)}
             <th>Value</th>
           </tr>
         </thead>
