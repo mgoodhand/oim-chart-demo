@@ -71,31 +71,6 @@ export default class OIMChart extends Component {
         <Fragment>
         <Filter onFilterChange={this.conceptFilterChange} options={this.availableConcepts()} default={this.state.concept}/>
       { this.breakdowns().map(b => <FactTable key={b.join()} facts={this.factsForBreakdown(b)} />) }
-        <div>
-        <Plot
-        data={[
-          {
-            x: ["foo"],
-            y: [2],
-            type: 'scatter',
-            mode: 'lines+points',
-            marker: {color: 'red'},
-          },
-          {
-            x: ["bar"], 
-            y: [2],
-            type: 'bar',
-          },
-          {
-            x: ["baz"], 
-            y: [3],
-            type: 'bar',
-          } 
-        ]}
-        layout={{width: this.width, height: this.height, title: this.title}}
-        config={{editable: false,  displayModeBar: false}}
-      />
-      </div>
       </Fragment>
     );
   }

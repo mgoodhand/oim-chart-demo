@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import OIM from './oim';
+import { List } from 'immutable';
+import Plot from 'react-plotly.js';
 
 export default class FactTable extends Component {
 
@@ -26,6 +28,27 @@ export default class FactTable extends Component {
     return result 
   }
 
+  variableNonPeriodAspects() {
+    return this.variableAspects().filter(a => !(a === "xbrl:periodStart" || a === "xbrl:periodEnd"))
+  }
+
+  series() {
+    const vnpa = this.variableNonPeriodAspects()
+    if ((vnpa.length) == 0) {
+      const sortedFacts = List(this.props.facts).sortBy(f => f.aspects["xbrl:periodEnd"]).toArray()
+      return [
+        {
+          x : sortedFacts.map(f => f.aspects["xbrl:periodEnd"]),
+          y : sortedFacts.map(f => f.value),
+          type: 'bar'
+        }
+      ]
+    }
+    else {
+      return []
+    }
+  }
+
   render() {
     return (
       <div>
@@ -47,6 +70,11 @@ export default class FactTable extends Component {
           ))}
         </tbody>
       </table>
+      <Plot
+        data={this.series()}
+        layout={{width: this.width, height: this.height, title: this.title}}
+        config={{editable: false,  displayModeBar: false}}
+      />
       </div>
     );
   }
