@@ -32,17 +32,29 @@ export default class FactTable extends Component {
     return this.variableAspects().filter(a => !(a === "xbrl:periodStart" || a === "xbrl:periodEnd"))
   }
 
-  series() {
-    const vnpa = this.variableNonPeriodAspects()
-    if ((vnpa.length) == 0) {
-      const sortedFacts = List(this.props.facts).sortBy(f => f.aspects["xbrl:periodEnd"]).toArray()
-      return [
-        {
+  series(facts, label) {
+      const sortedFacts = List(facts).sortBy(f => f.aspects["xbrl:periodEnd"]).toArray()
+      return {
           x : sortedFacts.map(f => f.aspects["xbrl:periodEnd"]),
           y : sortedFacts.map(f => f.value),
-          type: 'bar'
-        }
-      ]
+          type: 'bar',
+          name: label
+      }
+  }
+
+  data() {
+    const vnpa = this.variableNonPeriodAspects()
+    if (vnpa.length === 0) {
+      return [ this.series(this.props.facts) ]
+    }
+    else if (vnpa.length === 1) {
+      const variableAspect = vnpa[0]
+      const groupedFacts = List(this.props.facts).groupBy(f => f.aspects[variableAspect])
+      console.log("Grouped", groupedFacts)
+      const result = groupedFacts.mapEntries(([k, v]) => [k, this.series(v, k)])
+                                 .valueSeq().toArray()
+      console.log("Grouped data", result)
+      return result
     }
     else {
       return []
@@ -71,7 +83,7 @@ export default class FactTable extends Component {
         </tbody>
       </table>
       <Plot
-        data={this.series()}
+        data={this.data()}
         layout={{width: this.width, height: this.height, title: this.title}}
         config={{editable: false,  displayModeBar: false}}
       />
