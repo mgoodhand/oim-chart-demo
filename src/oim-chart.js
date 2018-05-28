@@ -54,11 +54,23 @@ export default class OIMChart extends Component {
     this.setState({ concept: concept })
   }
 
+  breakdowns() {
+    console.log("Breakdowns", OIM.breakdowns(this.filteredFacts()).join())
+    return OIM.breakdowns(this.filteredFacts())
+  }
+
+  factsForBreakdown(breakdown) {
+    const result = this.filteredFacts().filter(f => OIM.factAspects(f).equals(breakdown))
+    console.log("Facts for breakdown", breakdown.join())
+    console.log("Result: ", result)
+    return result
+  }
+
   render() {
     return (
         <Fragment>
         <Filter onFilterChange={this.conceptFilterChange} options={this.availableConcepts()} default={this.state.concept}/>
-        <FactTable facts={this.filteredFacts()} />
+      { this.breakdowns().map(b => <FactTable key={b.join()} facts={this.factsForBreakdown(b)} />) }
         <div>
         <Plot
         data={[
