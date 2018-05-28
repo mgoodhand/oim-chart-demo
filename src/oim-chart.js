@@ -17,11 +17,15 @@ export default class OIMChart extends Component {
   }
 
   availableConcepts() {
-    return OIM.aspectValues(this.facts(), "xbrl:concept").sort().toArray()
+    return OIM.aspectValues(this.numericFacts(), "xbrl:concept").sort().toArray()
   }
 
   initialConcept() {
     return this.props.concept || this.availableConcepts()[0]
+  }
+
+  numericFacts() {
+    return this.facts().filter(f => !isNaN(+f.value))
   }
 
   facts() {
