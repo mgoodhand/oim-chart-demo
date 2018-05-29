@@ -66,6 +66,11 @@ export default class FactTable extends Component {
       <div>
       {Object.entries(this.fixedAspectValues().toJSON())
           .map(([a, vs]) => (<div key={`fixed${a}`}>{a} = {vs[0]}</div>))}
+      <Plot
+        data={this.data()}
+        layout={{width: this.width, height: this.height, title: this.title}}
+        config={{editable: false,  displayModeBar: false}}
+      />
       <table>
         <thead>
           <tr>
@@ -82,11 +87,6 @@ export default class FactTable extends Component {
           ))}
         </tbody>
       </table>
-      <Plot
-        data={this.data()}
-        layout={{width: this.width, height: this.height, title: this.title}}
-        config={{editable: false,  displayModeBar: false}}
-      />
       </div>
     );
   }

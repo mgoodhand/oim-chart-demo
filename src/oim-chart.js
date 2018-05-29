@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import Plot from 'react-plotly.js';
 import PropTypes from 'prop-types';
 import OIM from './oim';
 import Filter from './filter';
@@ -70,7 +69,7 @@ export default class OIMChart extends Component {
     return (
         <Fragment>
         <Filter onFilterChange={this.conceptFilterChange} options={this.availableConcepts()} default={this.state.concept}/>
-      { this.breakdowns().map(b => <FactTable key={b.join()} facts={this.factsForBreakdown(b)} />) }
+      { this.breakdowns().map(b => <div><FactTable key={b.join()} facts={this.factsForBreakdown(b)} /><hr/></div>) }
       </Fragment>
     );
   }
