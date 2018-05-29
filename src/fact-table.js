@@ -32,10 +32,20 @@ export default class FactTable extends Component {
     return this.variableAspects().filter(a => !(a === "xbrl:periodStart" || a === "xbrl:periodEnd"))
   }
 
+  formatPeriod(start, end) {
+    const shortStart = start.replace('T00:00:00', '')
+    const shortEnd = end.replace('T00:00:00', '')
+    if (start === end) {
+      return `[${start}]`
+    } else {
+      return `[${shortStart}, ${shortEnd})` 
+    }
+  }
+
   series(facts, label) {
       const sortedFacts = List(facts).sortBy(f => f.aspects["xbrl:periodEnd"]).toArray()
       return {
-          x : sortedFacts.map(f => f.aspects["xbrl:periodEnd"]),
+          x : sortedFacts.map(f => this.formatPeriod(f.aspects["xbrl:periodStart"], f.aspects["xbrl:periodEnd"])),
           y : sortedFacts.map(f => f.value),
           type: 'bar',
           name: label
@@ -68,7 +78,6 @@ export default class FactTable extends Component {
           .map(([a, vs]) => (<div key={`fixed${a}`}>{a} = {vs[0]}</div>))}
       <Plot
         data={this.data()}
-        layout={{width: this.width, height: this.height, title: this.title}}
         config={{editable: false,  displayModeBar: false}}
       />
       <table>
